@@ -1,0 +1,1562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artivio - Where creativity meets intelligence</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            --danger-gradient: linear-gradient(135deg, #fc466b 0%, #3f5efb 100%);
+            --warning-gradient: linear-gradient(135deg, #fdbb2d 0%, #22c1c3 100%);
+
+            --bg-primary: #0f1419;
+            --bg-secondary: #1a1f2e;
+            --bg-tertiary: #242b3d;
+            --bg-chat: #2a3441;
+
+            --text-primary: #ffffff;
+            --text-secondary: #b8c5d1;
+            --text-muted: #8a9ba8;
+
+            --border-color: #3a4553;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+
+            --message-user: #4a90e2;
+            --message-ai: #50c878;
+            --message-other: #6c757d;
+
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background: var(--primary-gradient);
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 20px var(--shadow-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            background: var(--secondary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .status-bar {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-xl);
+            backdrop-filter: blur(10px);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .status-connected { background: #10b981; }
+        .status-connecting { background: #f59e0b; }
+        .status-error { background: #ef4444; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-xl);
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .user-menu:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Auth Section */
+        .auth-section {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            background: radial-gradient(circle at center, var(--bg-secondary) 0%, var(--bg-primary) 70%);
+        }
+
+        .auth-card {
+            background: var(--bg-secondary);
+            padding: 3rem;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 20px 40px var(--shadow-color);
+            border: 1px solid var(--border-color);
+            max-width: 400px;
+            width: 100%;
+            backdrop-filter: blur(20px);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-header h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            background: var(--secondary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .auth-header p {
+            color: var(--text-secondary);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 3rem;
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.875rem 1.5rem;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: var(--secondary-gradient);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-loading {
+            pointer-events: none;
+        }
+
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            margin: auto;
+            border: 2px solid transparent;
+            border-top-color: currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .auth-toggle {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--text-secondary);
+        }
+
+        .auth-toggle a {
+            color: #4facfe;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* Chat Section */
+        .chat-section {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            height: calc(100vh - 80px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .ai-chat-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--success-gradient);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .ai-chat-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(17, 153, 142, 0.3);
+        }
+
+        .conversations-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .conversation-item {
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 0.5rem;
+            border: 1px solid transparent;
+        }
+
+        .conversation-item:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--border-color);
+        }
+
+        .conversation-item.active {
+            background: var(--bg-chat);
+            border-color: #4facfe;
+        }
+
+        .conversation-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+
+        .avatar-user { background: var(--message-user); }
+        .avatar-ai { background: var(--message-ai); }
+
+        .conversation-info h4 {
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .conversation-info p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .online-status {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            margin-left: auto;
+        }
+
+        /* Chat Container */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-primary);
+        }
+
+        .chat-header {
+            padding: 1rem 1.5rem;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .chat-title {
+            flex: 1;
+        }
+
+        .chat-title h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .chat-title p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .typing-indicator {
+            font-size: 0.8rem;
+            color: #4facfe;
+            font-style: italic;
+        }
+
+        /* Messages */
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            display: flex;
+            gap: 0.75rem;
+            max-width: 80%;
+            animation: messageSlideIn 0.3s ease;
+        }
+
+        .message.sent {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        @keyframes messageSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .message-content {
+            background: var(--bg-secondary);
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-md);
+            position: relative;
+            border: 1px solid var(--border-color);
+        }
+
+        .message.sent .message-content {
+            background: var(--message-user);
+            color: white;
+            border-color: var(--message-user);
+        }
+
+        .message.ai .message-content {
+            background: var(--message-ai);
+            color: white;
+            border-color: var(--message-ai);
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+            text-align: right;
+        }
+
+        .message.sent .message-time {
+            text-align: left;
+        }
+
+        /* Input Area */
+        .input-area {
+            padding: 1rem 1.5rem;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 1rem;
+            align-items: flex-end;
+        }
+
+        .message-input-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        .message-input {
+            width: 100%;
+            min-height: 44px;
+            max-height: 120px;
+            padding: 0.75rem 3rem 0.75rem 1rem;
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-xl);
+            color: var(--text-primary);
+            resize: none;
+            font-family: inherit;
+            line-height: 1.4;
+            transition: all 0.3s ease;
+        }
+
+        .message-input:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+        .input-actions {
+            position: absolute;
+            right: 0.75rem;
+            bottom: 0.75rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .input-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 50%;
+            background: #4facfe;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .input-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .input-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .toast {
+            padding: 1rem 1.5rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            box-shadow: 0 10px 20px var(--shadow-color);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            animation: slideInRight 0.3s ease;
+            max-width: 350px;
+        }
+
+        .toast.success {
+            border-left: 4px solid #10b981;
+        }
+
+        .toast.error {
+            border-left: 4px solid #ef4444;
+        }
+
+        .toast.warning {
+            border-left: 4px solid #f59e0b;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Loading States */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 20, 25, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            backdrop-filter: blur(5px);
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--border-color);
+            border-top-color: #4facfe;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .chat-section {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .sidebar.mobile-open {
+                display: flex;
+                position: fixed;
+                top: 80px;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 1000;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .auth-card {
+                margin: 1rem;
+                padding: 2rem;
+            }
+
+            .message {
+                max-width: 90%;
+            }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-rocket"></i>
+                <div>
+                    <div>Artivio</div>
+                    <div style="font-size: 0.7rem; font-weight: 400; opacity: 0.8;">Where creativity meets intelligence</div>
+                </div>
+            </div>
+
+            <div class="status-bar">
+                <div class="status-indicator">
+                    <div class="status-dot status-connecting" id="status-dot"></div>
+                    <span id="status-text">Initializing...</span>
+                </div>
+            </div>
+
+            <div class="user-menu" id="user-menu" style="display: none;">
+                <div class="avatar avatar-user" id="user-avatar"></div>
+                <div>
+                    <div id="user-display-name"></div>
+                    <div style="font-size: 0.7rem; opacity: 0.8;" id="user-username"></div>
+                </div>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Auth Section -->
+    <div id="auth-section" class="auth-section">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h2 id="auth-title">Welcome Back!</h2>
+                <p id="auth-subtitle">Sign in to continue to Artivio</p>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-username">Username</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user input-icon"></i>
+                        <input type="text" id="login-username" class="form-input" placeholder="Enter your username" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="login-password" class="form-input" placeholder="Enter your password" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="login-btn">
+                    <i class="fas fa-sign-in-alt"></i>&nbsp;&nbsp;Sign In
+                </button>
+
+                <div class="auth-toggle">
+                    Don't have an account? <a href="#" onclick="showRegisterForm()">Sign up</a>
+                </div>
+            </form>
+
+            <!-- Register Form -->
+            <form id="register-form" style="display: none;">
+                <div class="form-group">
+                    <label for="reg-username">Username</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user input-icon"></i>
+                        <input type="text" id="reg-username" class="form-input" placeholder="Choose a username" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="reg-email">Email</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" id="reg-email" class="form-input" placeholder="Enter your email" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="reg-displayname">Display Name</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-id-card input-icon"></i>
+                        <input type="text" id="reg-displayname" class="form-input" placeholder="Your display name" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="reg-password">Password</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="reg-password" class="form-input" placeholder="Create a password" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="register-btn">
+                    <i class="fas fa-user-plus"></i>&nbsp;&nbsp;Create Account
+                </button>
+
+                <div class="auth-toggle">
+                    Already have an account? <a href="#" onclick="showLoginForm()">Sign in</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Chat Section -->
+    <div id="chat-section" class="chat-section" style="display: none;">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <button class="ai-chat-btn" onclick="startAIChat()">
+                    <i class="fas fa-robot"></i>
+                    Chat with AI
+                </button>
+            </div>
+
+            <div class="conversations-list">
+                <h4 style="margin-bottom: 1rem; color: var(--text-secondary); font-size: 0.9rem;">CONVERSATIONS</h4>
+                <div id="conversations-container"></div>
+
+                <h4 style="margin: 2rem 0 1rem; color: var(--text-secondary); font-size: 0.9rem;">ONLINE USERS</h4>
+                <div id="online-users-container"></div>
+            </div>
+        </div>
+
+        <!-- Chat Container -->
+        <div class="chat-container">
+            <div class="chat-header">
+                <div class="avatar avatar-ai" id="chat-avatar">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <div class="chat-title">
+                    <h3 id="chat-title">Select a conversation</h3>
+                    <p id="chat-subtitle">Choose someone to start chatting</p>
+                    <div class="typing-indicator" id="typing-indicator" style="display: none;">
+                        <i class="fas fa-ellipsis-h"></i> AI is thinking...
+                    </div>
+                </div>
+            </div>
+
+            <div class="messages-container" id="messages-container">
+                <div style="text-align: center; color: var(--text-muted); margin-top: 2rem;">
+                    <i class="fas fa-comments" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+                    <p>Start a conversation to see messages here</p>
+                </div>
+            </div>
+
+            <div class="input-area">
+                <div class="message-input-wrapper">
+                        <textarea
+                                id="message-input"
+                                class="message-input"
+                                placeholder="Type your message..."
+                                rows="1"
+                                onkeydown="handleInputKeyDown(event)"
+                                oninput="autoResize(this)"
+                        ></textarea>
+                    <div class="input-actions">
+                        <button class="input-btn" onclick="sendMessage()" id="send-btn" disabled>
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loading-overlay" style="display: none;">
+    <div class="loading-spinner"></div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.2/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+<script>
+    // Global variables
+    let stompClient = null;
+    let currentUser = null;
+    let token = null;
+    let currentConversationId = null;
+    let conversations = new Map();
+    let onlineUsers = new Map();
+
+    const API_BASE = 'http://localhost:8080';
+
+    // Initialize app
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeApp();
+        setupEventListeners();
+    });
+
+    function initializeApp() {
+        updateStatus('connecting', 'Checking connection...');
+        checkAPIHealth();
+    }
+
+    function setupEventListeners() {
+        // Form submissions
+        document.getElementById('login-form').addEventListener('submit', handleLogin);
+        document.getElementById('register-form').addEventListener('submit', handleRegister);
+
+        // Input validation
+        const messageInput = document.getElementById('message-input');
+        messageInput.addEventListener('input', function() {
+            const sendBtn = document.getElementById('send-btn');
+            sendBtn.disabled = !this.value.trim();
+        });
+    }
+
+    // Status management
+    function updateStatus(status, message) {
+        const dot = document.getElementById('status-dot');
+        const text = document.getElementById('status-text');
+
+        dot.className = `status-dot status-${status}`;
+        text.textContent = message;
+    }
+
+    // Toast notifications
+    function showToast(message, type = 'success') {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+
+        const icon = type === 'success' ? 'fas fa-check-circle' :
+            type === 'error' ? 'fas fa-exclamation-circle' :
+                'fas fa-info-circle';
+
+        toast.innerHTML = `
+                <i class="${icon}"></i>
+                <span>${message}</span>
+                <button onclick="this.parentElement.remove()" style="margin-left: auto; background: none; border: none; color: inherit; cursor: pointer;">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+
+        container.appendChild(toast);
+
+        setTimeout(() => {
+            if (toast.parentElement) {
+                toast.remove();
+            }
+        }, 5000);
+    }
+
+    // Loading overlay
+    function showLoading() {
+        document.getElementById('loading-overlay').style.display = 'flex';
+    }
+
+    function hideLoading() {
+        document.getElementById('loading-overlay').style.display = 'none';
+    }
+
+    // API health check
+    async function checkAPIHealth() {
+        try {
+            const response = await fetch(`${API_BASE}/api/test/health`);
+            const data = await response.json();
+            console.log('API Health:', data);
+            updateStatus('connecting', 'Ready to connect');
+        } catch (error) {
+            console.error('API Health check failed:', error);
+            updateStatus('error', 'API connection failed');
+            showToast('Cannot connect to server. Please check if the backend is running.', 'error');
+        }
+    }
+
+    // Auth forms
+    function showLoginForm() {
+        document.getElementById('login-form').style.display = 'block';
+        document.getElementById('register-form').style.display = 'none';
+        document.getElementById('auth-title').textContent = 'Welcome Back!';
+        document.getElementById('auth-subtitle').textContent = 'Sign in to continue to Artivio';
+    }
+
+    function showRegisterForm() {
+        document.getElementById('login-form').style.display = 'none';
+        document.getElementById('register-form').style.display = 'block';
+        document.getElementById('auth-title').textContent = 'Join Artivio';
+        document.getElementById('auth-subtitle').textContent = 'Create your account to get started';
+    }
+
+    // Authentication
+    async function handleLogin(event) {
+        event.preventDefault();
+
+        const username = document.getElementById('login-username').value.trim();
+        const password = document.getElementById('login-password').value;
+
+        if (!username || !password) {
+            showToast('Please fill in all fields', 'error');
+            return;
+        }
+
+        const btn = document.getElementById('login-btn');
+        btn.classList.add('btn-loading');
+        btn.disabled = true;
+
+        try {
+            updateStatus('connecting', 'Signing in...');
+
+            const response = await fetch(`${API_BASE}/api/auth/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.token) {
+                token = data.token;
+                currentUser = data.user;
+
+                showToast('Successfully signed in!');
+                showChatInterface();
+                initializeWebSocket();
+            } else {
+                showToast(data.message || 'Invalid credentials', 'error');
+                updateStatus('error', 'Sign in failed');
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            showToast('Connection error. Please try again.', 'error');
+            updateStatus('error', 'Connection failed');
+        } finally {
+            btn.classList.remove('btn-loading');
+            btn.disabled = false;
+        }
+    }
+
+    async function handleRegister(event) {
+        event.preventDefault();
+
+        const username = document.getElementById('reg-username').value.trim();
+        const email = document.getElementById('reg-email').value.trim();
+        const displayName = document.getElementById('reg-displayname').value.trim();
+        const password = document.getElementById('reg-password').value;
+
+        if (!username || !email || !displayName || !password) {
+            showToast('Please fill in all fields', 'error');
+            return;
+        }
+
+        const btn = document.getElementById('register-btn');
+        btn.classList.add('btn-loading');
+        btn.disabled = true;
+
+        try {
+            updateStatus('connecting', 'Creating account...');
+
+            const response = await fetch(`${API_BASE}/api/auth/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, email, displayName, password })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.token) {
+                token = data.token;
+                currentUser = data.user;
+
+                showToast('Account created successfully!');
+                showChatInterface();
+                initializeWebSocket();
+            } else {
+                showToast(data.message || 'Registration failed', 'error');
+                updateStatus('error', 'Registration failed');
+            }
+        } catch (error) {
+            console.error('Registration error:', error);
+            showToast('Connection error. Please try again.', 'error');
+            updateStatus('error', 'Connection failed');
+        } finally {
+            btn.classList.remove('btn-loading');
+            btn.disabled = false;
+        }
+    }
+
+    // Interface management
+    function showChatInterface() {
+        document.getElementById('auth-section').style.display = 'none';
+        document.getElementById('chat-section').style.display = 'grid';
+
+        // Update user menu
+        const userMenu = document.getElementById('user-menu');
+        const userAvatar = document.getElementById('user-avatar');
+        const userDisplayName = document.getElementById('user-display-name');
+        const userUsername = document.getElementById('user-username');
+
+        userAvatar.textContent = currentUser.displayName.charAt(0).toUpperCase();
+        userDisplayName.textContent = currentUser.displayName;
+        userUsername.textContent = `@${currentUser.username}`;
+        userMenu.style.display = 'flex';
+
+        loadData();
+    }
+
+    async function loadData() {
+        await Promise.all([
+            loadConversations(),
+            loadOnlineUsers()
+        ]);
+    }
+
+    // WebSocket connection
+    function initializeWebSocket() {
+        try {
+            const socket = new SockJS(`${API_BASE}/ws`);
+            stompClient = Stomp.over(socket);
+
+            stompClient.debug = null; // Disable debug logs
+
+            stompClient.connect({
+                'Authorization': 'Bearer ' + token
+            }, onWebSocketConnected, onWebSocketError);
+
+        } catch (error) {
+            console.error('WebSocket initialization error:', error);
+            updateStatus('error', 'WebSocket connection failed');
+        }
+    }
+
+    function onWebSocketConnected() {
+        console.log('WebSocket connected');
+        updateStatus('connected', `Connected as ${currentUser.displayName}`);
+
+        // Subscribe to channels
+        stompClient.subscribe('/user/queue/messages', onMessageReceived);
+        stompClient.subscribe('/user/queue/message-updates', onMessageUpdate);
+        stompClient.subscribe('/topic/user.status', onUserStatusUpdate);
+    }
+
+    function onWebSocketError(error) {
+        console.error('WebSocket error:', error);
+        updateStatus('error', 'WebSocket connection failed');
+        showToast('Real-time connection failed', 'error');
+    }
+
+    // WebSocket message handlers
+    function onMessageReceived(payload) {
+        const message = JSON.parse(payload.body);
+        displayMessage(message);
+
+        // Update conversation in sidebar
+        updateConversationLastMessage(message);
+    }
+
+    function onMessageUpdate(payload) {
+        const message = JSON.parse(payload.body);
+        updateMessageContent(message);
+    }
+
+    function onUserStatusUpdate(payload) {
+        const status = JSON.parse(payload.body);
+        updateUserOnlineStatus(status);
+    }
+
+    // Conversations
+    async function loadConversations() {
+        try {
+            const response = await fetch(`${API_BASE}/api/chat/conversations`, {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+
+            if (response.ok) {
+                const conversationList = await response.json();
+                conversations.clear();
+
+                conversationList.forEach(conv => {
+                    conversations.set(conv.id, conv);
+                });
+
+                displayConversations();
+            }
+        } catch (error) {
+            console.error('Error loading conversations:', error);
+        }
+    }
+
+    function displayConversations() {
+        const container = document.getElementById('conversations-container');
+        container.innerHTML = '';
+
+        conversations.forEach(conv => {
+            const item = createConversationItem(conv);
+            container.appendChild(item);
+        });
+    }
+
+    function createConversationItem(conversation) {
+        const item = document.createElement('div');
+        item.className = 'conversation-item';
+        item.onclick = () => selectConversation(conversation.id);
+
+        const isAI = conversation.conversationType === 'HUMAN_TO_AI';
+        const avatarClass = isAI ? 'avatar-ai' : 'avatar-user';
+        const avatarIcon = isAI ? '<i class="fas fa-robot"></i>' :
+            conversation.participant?.displayName?.charAt(0).toUpperCase() || 'U';
+
+        const title = isAI ? 'Artivio AI' :
+            conversation.participant?.displayName || 'Unknown User';
+
+        const lastMessage = conversation.lastMessage?.content || 'No messages yet';
+        const truncatedMessage = lastMessage.length > 50 ?
+            lastMessage.substring(0, 50) + '...' : lastMessage;
+
+        item.innerHTML = `
+                <div class="conversation-header">
+                    <div class="avatar ${avatarClass}">${avatarIcon}</div>
+                    <div class="conversation-info">
+                        <h4>${title}</h4>
+                        <p>${truncatedMessage}</p>
+                    </div>
+                    ${!isAI && conversation.participant?.isOnline ? '<div class="online-status"></div>' : ''}
+                </div>
+            `;
+
+        return item;
+    }
+
+    async function selectConversation(conversationId) {
+        currentConversationId = conversationId;
+
+        // Update UI
+        document.querySelectorAll('.conversation-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        event.currentTarget.classList.add('active');
+
+        const conversation = conversations.get(conversationId);
+        updateChatHeader(conversation);
+
+        // Load messages
+        await loadMessages(conversationId);
+
+        // Enable input
+        document.getElementById('send-btn').disabled = false;
+    }
+
+    function updateChatHeader(conversation) {
+        const isAI = conversation.conversationType === 'HUMAN_TO_AI';
+        const avatar = document.getElementById('chat-avatar');
+        const title = document.getElementById('chat-title');
+        const subtitle = document.getElementById('chat-subtitle');
+
+        if (isAI) {
+            avatar.className = 'avatar avatar-ai';
+            avatar.innerHTML = '<i class="fas fa-robot"></i>';
+            title.textContent = 'Artivio AI';
+            subtitle.textContent = 'AI-powered assistant';
+        } else {
+            avatar.className = 'avatar avatar-user';
+            avatar.textContent = conversation.participant?.displayName?.charAt(0).toUpperCase() || 'U';
+            title.textContent = conversation.participant?.displayName || 'Unknown User';
+            subtitle.textContent = conversation.participant?.isOnline ? 'Online' : 'Offline';
+        }
+    }
+
+    // Messages
+    async function loadMessages(conversationId) {
+        try {
+            const response = await fetch(`${API_BASE}/api/chat/conversations/${conversationId}/messages`, {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+
+            if (response.ok) {
+                const messages = await response.json();
+                displayMessages(messages);
+            }
+        } catch (error) {
+            console.error('Error loading messages:', error);
+        }
+    }
+
+    function displayMessages(messages) {
+        const container = document.getElementById('messages-container');
+        container.innerHTML = '';
+
+        messages.forEach(message => {
+            displayMessage(message);
+        });
+    }
+
+    function displayMessage(message) {
+        const container = document.getElementById('messages-container');
+        const messageEl = createMessageElement(message);
+        container.appendChild(messageEl);
+        container.scrollTop = container.scrollHeight;
+    }
+
+    function createMessageElement(message) {
+        const messageEl = document.createElement('div');
+        const isOwnMessage = message.sender && message.sender.id === currentUser.id;
+        const isAI = message.messageType === 'AI';
+
+        let messageClass = 'message';
+        if (isOwnMessage) messageClass += ' sent';
+        if (isAI) messageClass += ' ai';
+
+        messageEl.className = messageClass;
+        messageEl.id = `message-${message.id}`;
+
+        let avatar, senderName;
+        if (isAI) {
+            avatar = '<i class="fas fa-robot"></i>';
+            senderName = 'Artivio AI';
+        } else if (isOwnMessage) {
+            avatar = currentUser.displayName.charAt(0).toUpperCase();
+            senderName = 'You';
+        } else {
+            avatar = message.sender?.displayName?.charAt(0).toUpperCase() || 'U';
+            senderName = message.sender?.displayName || 'Unknown';
+        }
+
+        const avatarClass = isAI ? 'avatar-ai' : 'avatar-user';
+        const time = new Date(message.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+        messageEl.innerHTML = `
+                <div class="message-avatar ${avatarClass}">${avatar}</div>
+                <div>
+                    <div class="message-content" id="content-${message.id}">
+                        ${message.content}
+                    </div>
+                    <div class="message-time">${time}</div>
+                </div>
+            `;
+
+        return messageEl;
+    }
+
+    function updateMessageContent(message) {
+        const contentEl = document.getElementById(`content-${message.id}`);
+        if (contentEl) {
+            contentEl.textContent = message.content;
+        }
+    }
+
+    function updateConversationLastMessage(message) {
+        const conversation = conversations.get(message.conversationId);
+        if (conversation) {
+            conversation.lastMessage = message;
+            displayConversations();
+        }
+    }
+
+    // Send message
+    async function sendMessage() {
+        const input = document.getElementById('message-input');
+        const content = input.value.trim();
+
+        if (!content || !currentConversationId) return;
+
+        const sendBtn = document.getElementById('send-btn');
+        sendBtn.disabled = true;
+
+        try {
+            const response = await fetch(`${API_BASE}/api/chat/messages`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                body: JSON.stringify({
+                    conversationId: currentConversationId,
+                    content: content
+                })
+            });
+
+            if (response.ok) {
+                input.value = '';
+                autoResize(input);
+
+                // Show typing indicator for AI responses
+                const conversation = conversations.get(currentConversationId);
+                if (conversation && conversation.conversationType === 'HUMAN_TO_AI') {
+                    showTypingIndicator();
+                }
+            } else {
+                showToast('Failed to send message', 'error');
+            }
+        } catch (error) {
+            console.error('Error sending message:', error);
+            showToast('Failed to send message', 'error');
+        } finally {
+            sendBtn.disabled = !input.value.trim();
+        }
+    }
+
+    function showTypingIndicator() {
+        const indicator = document.getElementById('typing-indicator');
+        indicator.style.display = 'block';
+
+        // Hide after 5 seconds (fallback)
+        setTimeout(() => {
+            indicator.style.display = 'none';
+        }, 5000);
+    }
+
+    // Input handling
+    function handleInputKeyDown(event) {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            sendMessage();
+        }
+    }
+
+    function autoResize(textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+    }
+
+    // Online users
+    async function loadOnlineUsers() {
+        try {
+            const response = await fetch(`${API_BASE}/api/chat/users/online`, {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+
+            if (response.ok) {
+                const users = await response.json();
+                onlineUsers.clear();
+
+                users.forEach(user => {
+                    onlineUsers.set(user.id, user);
+                });
+
+                displayOnlineUsers();
+            }
+        } catch (error) {
+            console.error('Error loading online users:', error);
+        }
+    }
+
+    function displayOnlineUsers() {
+        const container = document.getElementById('online-users-container');
+        container.innerHTML = '';
+
+        if (onlineUsers.size === 0) {
+            container.innerHTML = '<p style="color: var(--text-muted); font-size: 0.8rem; text-align: center;">No users online</p>';
+            return;
+        }
+
+        onlineUsers.forEach(user => {
+            const item = createUserItem(user);
+            container.appendChild(item);
+        });
+    }
+
+    function createUserItem(user) {
+        const item = document.createElement('div');
+        item.className = 'conversation-item';
+        item.onclick = () => startHumanChat(user.id);
+
+        item.innerHTML = `
+                <div class="conversation-header">
+                    <div class="avatar avatar-user">${user.displayName.charAt(0).toUpperCase()}</div>
+                    <div class="conversation-info">
+                        <h4>${user.displayName}</h4>
+                        <p>@${user.username}</p>
+                    </div>
+                    <div class="online-status"></div>
+                </div>
+            `;
+
+        return item;
+    }
+
+    function updateUserOnlineStatus(status) {
+        if (status.online) {
+            // Reload online users to get updated list
+            loadOnlineUsers();
+        } else {
+            onlineUsers.delete(status.username);
+            displayOnlineUsers();
+        }
+    }
+
+    // Chat actions
+    async function startAIChat() {
+        try {
+            showLoading();
+
+            const response = await fetch(`${API_BASE}/api/chat/conversations?type=HUMAN_TO_AI`, {
+                method: 'POST',
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+
+            if (response.ok) {
+                const conversation = await response.json();
+                conversations.set(conversation.id, conversation);
+                displayConversations();
+                selectConversation(conversation.id);
+
+                showToast('AI chat started!');
+            } else {
+                showToast('Failed to start AI chat', 'error');
+            }
+        } catch (error) {
+            console.error('Error starting AI chat:', error);
+            showToast('Failed to start AI chat', 'error');
+        } finally {
+            hideLoading();
+        }
+    }
+
+    async function startHumanChat(userId) {
+        try {
+            showLoading();
+
+            const response = await fetch(`${API_BASE}/api/chat/conversations?recipientId=${userId}&type=HUMAN_TO_HUMAN`, {
+                method: 'POST',
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+
+            if (response.ok) {
+                const conversation = await response.json();
+                conversations.set(conversation.id, conversation);
+                displayConversations();
+                selectConversation(conversation.id);
+
+                const user = onlineUsers.get(userId);
+                showToast(`Chat started with ${user.displayName}!`);
+            } else {
+                showToast('Failed to start chat', 'error');
+            }
+        } catch (error) {
+            console.error('Error starting human chat:', error);
+            showToast('Failed to start chat', 'error');
+        } finally {
+            hideLoading();
+        }
+    }
+</script>
+</body>
+</html>
