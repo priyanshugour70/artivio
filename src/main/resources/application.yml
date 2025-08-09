@@ -3,10 +3,10 @@ spring:
     name: artivio
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/artivio_db
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:Harda@20p}
-    driver-class-name: org.postgresql.Driver
+    url: jdbc:h2:mem:artivio_db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
 
   jpa:
     hibernate:
